@@ -1,10 +1,10 @@
 # CoSA — Correlation-Guided Change Attention
 
-Official **code + paper** release for **CoSA** (Context Sampling Attention): a lightweight decoder-side refinement module for remote sensing change detection.
+Official **paper + experiment configs** release for **CoSA** (Context Sampling Attention): a lightweight decoder-side refinement module for remote sensing change detection.
 
 **Repository:** [https://github.com/rashiedomar/CoSA](https://github.com/rashiedomar/CoSA)
 
-This tree is a **clean export** (paper, configs, models, scripts, small ablation summaries). It is meant to replace a cluttered development checkout for **public GitHub** and **submission**.
+This tree is a **clean export** for **public GitHub** and **submission**: LaTeX paper, **configuration files** for training/benchmarks, scripts, and compact ablation summaries—**no** bundled model Python package or checkpoints.
 
 ---
 
@@ -13,40 +13,31 @@ This tree is a **clean export** (paper, configs, models, scripts, small ablation
 | Path | Contents |
 |------|-----------|
 | **`paper/`** | IEEE Access LaTeX project: `main.tex`, `sections/`, `tables/`, `refs.bib`, `figures/`, class files. **Use this for Overleaf** (see `OVERLEAF.md`). |
-| **`configs/`** | Training configs (`configs/custom/` baseline + CoSA; `configs/opencd/` model recipes). |
-| **`models/`** | CoSA-related code: FC-Siam / Open-CD paths, STANet/BIT standalone experiments. |
-| **`scripts/`** | Figure/table generation and analysis helpers. |
+| **`configs/`** | **All experiment definitions** used with Open-CD / MMEngine-style runs: `configs/custom/` (baseline + CoSA) and `configs/opencd/` (model recipes). These are Python config files (not a separate `models/` tree). |
+| **`scripts/`** | Figure/table generation and analysis helpers (optional; may expect a local Open-CD checkout for imports). |
 | **`figures/`** | Extra plots used by scripts (not all are in `paper/figures/`). |
-| **`ablation/`** | README + **compact** ablation summaries (`*.json`, `*.md`, `visualizations/`). Full per-run checkpoints and multi‑GB masks are **not** shipped here. |
+| **`ablation/`** | README + compact summaries (`*.json`, `*.md`, `visualizations/`). |
 | **`LICENSE`** | MIT |
 | **`CITATION.cff`** | Citation metadata |
 
 ---
 
-## Quick start (code)
+## Quick start
+
+- **Paper only:** see **`OVERLEAF.md`** and zip **`paper/`** for Overleaf.
+- **Reproduce training:** use an [Open-CD](https://github.com/likyoo/open-cd) (or compatible) environment, point dataset paths in **`configs/`**, and run with the same framework versions you used in the lab. **Checkpoints and full training code are not shipped** in this repo to keep it small and license-clean.
 
 ```bash
-# Python deps (adjust torch for your CUDA)
-pip install -r requirements.txt
+pip install -r requirements.txt   # minimal; add torch / mmcv per your stack
 ```
-
-Point your experiments at **`configs/custom/`** and the **`models/`** package layout you use with Open-CD (or your fork). Paths assume you clone datasets separately; see configs for dataset roots.
-
----
-
-## Paper (Overleaf / Monday)
-
-1. Zip **`paper/`** or drag the folder into Overleaf.  
-2. Main document: **`paper/main.tex`**.  
-3. Details: **`OVERLEAF.md`**.
 
 ---
 
 ## What is intentionally excluded
 
-- Raw datasets and `work_dirs/` / checkpoints (large binaries).  
-- Multi‑gigabyte ablation run directories from the lab machine (only summaries + small visuals are included).  
-- Scratch drafts and duplicate `paper/` trees from development repos.
+- **`models/`** (standalone training scripts and local checkpoints from development).  
+- Raw datasets, `work_dirs/`, and `*.pth` weights.  
+- Multi‑gigabyte ablation run directories (only summaries + small visuals are included).
 
 ---
 
