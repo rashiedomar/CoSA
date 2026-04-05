@@ -1,0 +1,6 @@
+# CoSA public repo — minimal deps for scripts and PyTorch experiments.
+# Install PyTorch separately for your CUDA/CPU: https://pytorch.org/
+
+numpy>=1.22
+matplotlib>=3.5
+# torch>=2.0  # install from pytorch.org to match your platform

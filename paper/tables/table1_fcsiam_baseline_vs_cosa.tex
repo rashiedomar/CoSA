@@ -1,0 +1,25 @@
+\begin{table*}[t]
+  \centering
+  \caption{Performance comparison between the FC-Siam baseline and \cosa{} on four change detection benchmarks.}
+  \label{tab:fcsiam_vs_cosa}
+  \setlength{\tabcolsep}{6pt}
+  \renewcommand{\arraystretch}{1.08}
+  \small
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r r r r r r}
+    \toprule
+    Dataset & Method & \Fonec{} (\%) & \Iouc{} (\%) & \PrecC{} (\%) & \RecC{} (\%) & $\Delta \mathrm{F1}_c$ & $\Delta \mathrm{IoU}_c$ \\
+    \midrule
+    \textbf{LEVIR-CD} & FC-Siam baseline & 87.70 & 78.09 & 90.23 & 85.31 & --- & --- \\
+    & \cosa{} & \textbf{89.45} & \textbf{80.91} & \textbf{90.39} & \textbf{88.52} & \textbf{+1.75} & \textbf{+2.82} \\
+    \midrule
+    \textbf{DSIFN} & FC-Siam baseline & 74.85 & 59.81 & \textbf{82.05} & 68.81 & --- & --- \\
+    & \cosa{} & \textbf{76.52} & \textbf{61.98} & 68.61 & \textbf{86.50} & \textbf{+1.67} & \textbf{+2.17} \\
+    \midrule
+    \textbf{CLCD} & FC-Siam baseline & 46.94 & 30.67 & 34.16 & \textbf{75.04} & --- & --- \\
+    & \cosa{} & \textbf{49.53} & \textbf{32.91} & \textbf{41.97} & 60.40 & \textbf{+2.59} & \textbf{+2.24} \\
+    \midrule
+    \textbf{S2Looking} & FC-Siam baseline & 38.00 & 23.46 & 24.93 & 79.82 & --- & --- \\
+    & \cosa{} & \textbf{40.44} & \textbf{25.34} & \textbf{26.99} & \textbf{80.58} & \textbf{+2.44} & \textbf{+1.88} \\
+    \bottomrule
+  \end{tabular*}
+\end{table*}

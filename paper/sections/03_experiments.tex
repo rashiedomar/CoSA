@@ -1,0 +1,52 @@
+This section defines the datasets, metrics, and evaluation protocol used to assess \cosa{} under controlled and transfer settings. Table~\ref{tab:datasets} summarizes the four benchmark datasets used throughout the section (scale, splits, and resolution).
+
+\input{tables/table_datasets}
+
+\subsection{Datasets and Evaluation Metrics}
+We evaluate on four benchmarks with complementary difficulty profiles: LEVIR-CD \cite{chen2020stanet}, S2Looking \cite{s2looking_dataset}, DSIFN \cite{dsifn_dataset}, and CLCD \cite{clcd_dataset}. This selection intentionally spans clean urban building change (LEVIR-CD), sparse off-nadir scenes (S2Looking), mixed urban-rural conditions (DSIFN), and noisy agricultural boundaries (CLCD), so claims are not tied to one favorable benchmark. The statistics and sources in Table~\ref{tab:datasets} make clear that the four benchmarks differ substantially in annotation richness and scene structure.
+
+Figure~\ref{fig:training_dynamics} shows training loss for the controlled FC-Siam baseline and FC-Siam+\cosa{} runs on each of the four datasets under the shared protocol.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{training_loss_all_datasets.png}
+  \caption{Training loss for the FC-Siam baseline and FC-Siam+\cosa{} across LEVIR-CD, S2Looking, DSIFN, and CLCD.}
+  \label{fig:training_dynamics}
+\end{figure*}
+
+These four datasets are sufficient for evaluating generality because, taken together, they cover the main axes on which remote sensing CD methods typically fail: clean versus noisy annotation, dense versus sparse change, stable versus off-nadir acquisition, and relatively sharp versus ambiguous boundaries. LEVIR-CD provides a relatively clean, high-quality setting with limited headroom; S2Looking stresses sparse and ambiguous changes under viewpoint variation; DSIFN represents intermediate real-world complexity; and CLCD stresses robustness to noisy boundaries and label uncertainty. A method that improves consistently across all four is therefore less likely to be benefiting from dataset cherry-picking and more likely to be addressing a transferable refinement problem.
+
+Following standard CD reporting, we use changed-class precision, recall, F1, and IoU (\PrecC{}, \RecC{}, \Fonec{}, \Iouc{}) \cite{devansh2025,kamalakar2025}:
+\begin{equation}
+\mathrm{Prec}_c=\frac{TP}{TP+FP}, \quad \mathrm{Rec}_c=\frac{TP}{TP+FN},
+\end{equation}
+\begin{equation}
+\mathrm{F1}_c=\frac{2\cdot \mathrm{Prec}_c\cdot \mathrm{Rec}_c}{\mathrm{Prec}_c+\mathrm{Rec}_c}, \quad \mathrm{IoU}_c=\frac{TP}{TP+FP+FN}.
+\end{equation}
+These metrics capture false-alarm suppression (precision), missed-change recovery (recall), overall discrimination (F1), and spatial overlap quality (IoU).
+
+\subsection{Experimental Settings and Protocol}
+To isolate architectural effects, baseline and \cosa{} share identical settings: a Siamese U-Net-style decoder \cite{ronneberger2015unet} with a ResNet-18 backbone \cite{he2016resnet}, absolute differencing, weighted cross-entropy (unchanged:changed = 1:3), Adam ($\beta_1=0.9$, $\beta_2=0.999$), initial learning rate $10^{-4}$, and a ReduceLROnPlateau scheduler that monitors validation \Fonec{} and halves the learning rate when the score fails to improve for 10 epochs. Training uses batch size 8 for up to 100 epochs with early stopping (patience 15) and seed 42. We use standard augmentation (flip, rotation, and light color jitter), select checkpoints by validation \Fonec{}, and report test metrics at a 0.5 sigmoid threshold. For LEVIR-CD, the split is 445 training images, 64 validation images, and 128 test images. For S2Looking, DSIFN, and CLCD, we use fixed train/validation/test splits documented in the released configs to ensure reproducibility. Standalone STANet and BIT experiments are run under their native/custom pipelines to evaluate plug-in compatibility under model-preferred recipes; these are reported in Subsection~\ref{sec:hero_models}.
+
+\subsection{Baseline vs \cosa{}}
+Table~\ref{tab:fcsiam_vs_cosa} reports controlled test-set results for the FC-Siam baseline and FC-Siam+\cosa{} across all four datasets.
+
+\input{tables/table1_fcsiam_baseline_vs_cosa}
+
+\cosa{} improves \Fonec{} and \Iouc{} on all four datasets, with \Fonec{} gains from +1.67 to +2.59 and \Iouc{} gains from +1.88 to +2.82. Although the numerical gains may appear modest, they are consistent across all datasets and achieved with negligible parameter overhead. The largest gains appear on S2Looking and CLCD, where sparse changes and noisy boundaries make selective context aggregation more valuable. The gains are not uniform: on LEVIR-CD, \cosa{} preserves precision and improves recall (+3.21 points), indicating stronger missed-change recovery without clear false-alarm inflation; on CLCD, precision rises strongly (+7.81) while recall decreases, indicating conservative false-positive filtering in noisy conditions; DSIFN shows a recall-oriented shift with reduced precision, while S2Looking improves both precision and recall modestly. This behavior reflects the adaptive nature of \cosa{}, which adjusts refinement based on dataset characteristics. The training-loss curves in Figure~\ref{fig:training_dynamics} are consistent with this pattern: \cosa{} typically converges to lower loss and stabilizes earlier across the four datasets. This dataset-dependent behavior motivates the deeper error analysis in Section~\ref{sec:analysis}.
+
+Figure~\ref{fig:baseline_cosa_qual_all_datasets} shows representative predictions on one strong-gain test sample per dataset (same protocol as Table~\ref{tab:fcsiam_vs_cosa}): baseline overlays (TP green, FP red), \cosa{} overlays, and \cosa{} gain (blue) with remaining FP (red).
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{baseline_cosa_qual_all_datasets.png}
+  \caption{Qualitative baseline-vs-\cosa{} comparison across LEVIR-CD, S2Looking, DSIFN, and CLCD. Columns (left to right): T2 image, ground truth, baseline overlay (TP green, FP red), \cosa{} overlay (TP green, FP red), and \cosa{} gains (blue) with remaining FP (red).}
+  \label{fig:baseline_cosa_qual_all_datasets}
+\end{figure*}
+
+The visual trends align with Table~\ref{tab:fcsiam_vs_cosa}: reduced false positives in sparse/noisy scenes and improved coverage of weak true changes in ambiguous regions.
+
+We isolate mechanism-level evidence in Subsection~\ref{sec:ablation}, test cross-backbone transferability in Subsection~\ref{sec:hero_models}, and analyze FP/FN transitions with patch-level consistency in Section~\ref{sec:analysis}.
+
+\subsection{Reproducibility}
+We fix training and data-loading seeds (including seed 42 for the controlled FC-Siam runs), save the best checkpoint by validation \Fonec{}, and cache per-sample predictions used for analysis tables. Paper tables and figures are generated from those logged artifacts. Full datasets and large checkpoints are omitted from the public repository for size, but released code includes configuration files, split definitions, training scripts, and evaluation commands sufficient to reproduce the reported metrics on the same public benchmarks.

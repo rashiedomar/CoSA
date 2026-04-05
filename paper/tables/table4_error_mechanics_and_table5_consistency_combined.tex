@@ -1,0 +1,42 @@
+% Combined Table: Error correction + consistency (compact, avoids float-only pages)
+% Sources:
+% - table4_error_mechanics.tex
+% - table5_consistency.tex
+% Label \ref{tab:analysis_combined} is unique; cite this if you swap in this file instead of separate table4/table5.
+\begin{table}[H]
+  \centering
+  \caption{Analysis summary for \cosa{} across model families. Top: percent reduction in FP/FN counts computed as $(\mathrm{baseline}-\mathrm{\cosa{}})/\mathrm{baseline}\times100$ (positive means reduction). Bottom: patch-level consistency of \cosa{} improvements (percentage of samples per category and average $\Delta$\Fonec{} in points).}
+  \label{tab:analysis_combined}
+  \scriptsize
+
+  % Keep this as a single float, but use two compact tables inside to avoid overfull boxes.
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.05}
+  \begin{tabular}{l l l}
+    \toprule
+    \multicolumn{3}{c}{\textbf{Error Correction Mechanics (FP/FN transitions)}} \\
+    \midrule
+    Model family & FP reduction & FN reduction \\
+    \midrule
+    CNN (FC-Siam) & -30.3\% & +23.7\% \\
+    Attention (STANet) & +68.5\% & -179.8\% \\
+    Transformer (BIT) & +13.6\% & -10.2\% \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{4pt}
+
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{l c c c}
+    \toprule
+    \multicolumn{4}{c}{\textbf{Patch-level Consistency Across the Test Set}} \\
+    \midrule
+    Category & FC-Siam & STANet & BIT \\
+    \midrule
+    Significant gain & 6.25\%, +16.97 & 5.42\%, +19.13 & 2.10\%, +90.50 \\
+    Moderate gain & 21.09\%, +5.00 & 21.83\%, +5.52 & 1.42\%, +4.58 \\
+    Neutral & 58.59\%, +0.58 & 63.67\%, +0.05 & 89.31\%, +0.04 \\
+    Degradation & 14.06\%, -5.78 & 9.08\%, -22.97 & 7.18\%, -10.87 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

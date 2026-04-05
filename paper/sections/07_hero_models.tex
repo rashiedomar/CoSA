@@ -1,0 +1,7 @@
+\subsection{Standalone Hero Models}\label{sec:hero_models}
+We report standalone ``hero'' experiments for STANet \cite{chen2020stanet} and BIT \cite{chen2022bit} under their native/custom pipelines. The goal is to test transferability of \cosa{} when inserted into strong non-baseline backbones.
+Table~\ref{tab:hero_models} reports the changed-class results for these two backbones and shows that \cosa{} delivers a large gain on STANet but only a marginal change on BIT.
+
+\input{tables/table3_hero_models}
+
+The two hero models exhibit clearly different responses. On STANet, \cosa{} provides a large gain (\Fonec{}: 80.71 \textrightarrow 86.14; \Iouc{}: 67.66 \textrightarrow 75.66) with a strong precision increase, indicating effective suppression of over-detection. On BIT, the effect is near-neutral (\Fonec{}: 91.22 \textrightarrow 91.26), consistent with partial redundancy between explicit correlation gating and BIT's transformer-based temporal interaction. Standalone evidence therefore matches the broader pattern in this paper: \cosa{} is most beneficial when it complements, rather than duplicates, the temporal interaction already encoded by the backbone \cite{w2022,wei2024}.

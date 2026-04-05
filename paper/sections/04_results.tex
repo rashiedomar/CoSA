@@ -1,0 +1,12 @@
+\subsection{Open-CD Benchmark Results}
+\noindent\textbf{Setup.} Open-CD provides a unified framework for cross-architecture benchmarking \cite{li2024opencd}. We report a verified subset spanning ChangerEx \cite{fang2022changer}, STANet \cite{chen2020stanet}, SNUNet-CD \cite{fang2021snunetcd}, BIT \cite{chen2022bit}, and TinyCD \cite{codegoni2022tinycd}. Table~\ref{tab:comprehensive} includes only runs with reproducible artifacts in this repository snapshot (configs, logs, and cached predictions).
+
+\input{tables/comprehensive_results_table}
+
+\noindent\textbf{Main observations.} Performance shifts are architecture-dependent. In the ChangerEx family, \cosa{} gives small positive or near-neutral shifts (largest on r18/s50, minimal on s101). In STANet variants, gains are modest in this unified setting. For SNUNet and BIT, shifts are mixed or negative in this schedule pairing. These outcomes are consistent with our central claim: \cosa{} is a complementary refinement, not a universally dominant replacement.
+
+\noindent\textbf{Interpretation.} This behavior is expected because Open-CD aggregates backbones with very different temporal interaction mechanisms, from fusion-centric designs to stronger attention/transformer variants \cite{w2022,wei2024,xiaowen2024,yan2024}. If temporal interaction is already strong internally, explicit correlation gating may become partially redundant; when interaction is weaker or more local, \cosa{} has more room to help.
+
+\noindent\textbf{Scope note.} Table~\ref{tab:comprehensive} is not a global leaderboard claim. Schedule mismatch remains (e.g., many baselines at 40k versus \cosa{} fine-tuning at 20e), so results should be interpreted as a reproducible transferability study within one toolkit.
+
+\noindent\textbf{Practical guidance.} Based on controlled, standalone, and Open-CD evidence, \cosa{} is most attractive when: (i) the backbone is difference-dominant, (ii) temporal interaction is limited/local, and (iii) false negatives are a key error mode. For strong global-interaction backbones (e.g., transformer-style models \cite{chen2022bit,bandara2022changeformer,w2022}), neutral outcomes are plausible.

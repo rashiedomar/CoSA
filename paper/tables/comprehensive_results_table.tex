@@ -1,0 +1,41 @@
+% Derived from docs/COMPREHENSIVE_TABLE.md (changed-class metrics).
+\begin{table}[t]
+  \centering
+  \caption{Open-CD benchmark on the LEVIR-CD test set (changed class) for the subset of models evaluated in this work.}
+  \label{tab:comprehensive}
+  \setlength{\tabcolsep}{1.5pt}
+  \renewcommand{\arraystretch}{0.94}
+  \tiny
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{l l c r r r r}
+    \toprule
+    Method & Backbone & Train & \PrecC{} & \RecC{} & \Fonec{} & \Iouc{} \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Changer family}} \\
+    ChangerEx r18 (baseline) & ResNet-18 & 40k & 93.48 & 91.82 & 92.64 & 86.29 \\
+    ChangerEx r18 (+ \cosa{}) & ResNet-18 & 20e & 93.50 & 91.86 & 92.67 & 86.35 \\
+    ChangerEx s50 (baseline) & IA\_ResNeSt & 40k & 94.06 & 91.86 & 92.95 & 86.82 \\
+    ChangerEx s50 (+ \cosa{}) & IA\_ResNeSt & 20e & 93.90 & 92.12 & 93.00 & 86.92 \\
+    ChangerEx s101 (baseline) & IA\_ResNeSt & 40k & 94.04 & 92.39 & 93.20 & 87.27 \\
+    ChangerEx s101 (+ \cosa{}) & IA\_ResNeSt & 20e & 93.98 & 92.40 & 93.18 & 87.24 \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Attention-based}} \\
+    STANet-BASE (baseline) & ResNet-18 & 40k & 69.22 & 96.32 & 80.55 & 67.44 \\
+    STANet-BASE (+ \cosa{}) & ResNet-18 & 20e & 69.49 & 96.22 & 80.70 & 67.64 \\
+    STANet-PAM (baseline) & ResNet-18 & 40k & 85.11 & 87.13 & 86.11 & 75.60 \\
+    STANet-PAM (+ \cosa{}) & ResNet-18 & 20e & 83.14 & 89.90 & 86.38 & 76.03 \\
+    \midrule
+    \multicolumn{7}{l}{\textit{U-Net family}} \\
+    SNUNet (baseline) & SNUNet\_ECAM & 40k & 93.17 & 89.53 & 91.31 & 84.01 \\
+    SNUNet (+ \cosa{}) & SNUNet\_ECAM & 20e & 93.01 & 88.70 & 90.81 & 83.16 \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Transformer-based}} \\
+    BIT (baseline) & ResNet-18 & 10k & 92.84 & 87.06 & 89.86 & 81.58 \\
+    BIT (+ \cosa{}) & ResNet-18 & 20e & 91.96 & 86.29 & 89.04 & 80.24 \\
+    \midrule
+    \multicolumn{7}{l}{\textit{Lightweight reference}} \\
+    TinyCDv2-L (baseline) & TinyNet-L & 40k & 95.72 & 95.17 & 95.44 & 91.59 \\
+    TinyCDv2-L (Trial 7 (HParam)) & TinyNet-L & 20k & 92.13 & 89.65 & 90.87 & 83.27 \\
+    \bottomrule
+  \end{tabular}}
+\end{table}

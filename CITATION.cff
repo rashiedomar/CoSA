@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite our CoSA paper."
+title: "CoSA: Correlation-Guided Change Attention for Remote Sensing Change Detection"
+type: software
+authors:
+  - family-names: Omar
+    given-names: Abdirashid
+    affiliation: Kookmin University
+  - family-names: Park
+    given-names: Jonghyuk
+    affiliation: Kookmin University
+repository-code: "https://github.com/rashiedomar/CoSA"
+keywords:
+  - change detection
+  - remote sensing
+  - Open-CD
+  - Siamese networks
+  - attention
+license: MIT

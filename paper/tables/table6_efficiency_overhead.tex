@@ -1,0 +1,19 @@
+\begin{table}[t]
+  \centering
+  \caption{Measured efficiency overhead of adding \cosa{}. Open-CD rows use verified run artifacts (Param/GFLOPS from \texttt{docs/COMPREHENSIVE\_TABLE.md}); FC-Siam reports the controlled baseline parameter delta from our implementation.}
+  \label{tab:efficiency_overhead}
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.05}
+  \scriptsize
+  \begin{tabular}{l r r r}
+    \toprule
+    Model pair & $\Delta$Params (M) & $\Delta$GFLOPS & $\Delta$\Fonec{} \\
+    \midrule
+    FC-Siam $\rightarrow$ FC-Siam+\cosa{} & +0.000066 & N/A & +1.75 \\
+    ChangerEx r18 $\rightarrow$ +\cosa{} & +0.017 & +0.067 & +0.03 \\
+    STANet-BASE $\rightarrow$ +\cosa{} & +0.099 & +0.268 & +0.15 \\
+    SNUNet $\rightarrow$ +\cosa{} & +0.001 & +0.034 & -0.50 \\
+    BIT $\rightarrow$ +\cosa{} & +0.003 & +0.017 & -0.82 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

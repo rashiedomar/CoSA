@@ -1,0 +1,108 @@
+\documentclass{ieeeaccess}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{dblfloatfix}
+\usepackage{bm}
+
+\makeatletter
+\AtBeginDocument{\DeclareMathVersion{bold}
+\SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
+\SetSymbolFont{NewLetters}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathrm}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathit}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathbf}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathtt}{bold}{OT1}{pcr}{b}{n}
+\SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
+\renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
+\makeatother
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\graphicspath{{figures/}}
+
+% Convenience macros
+\newcommand{\cosa}{CoSA}
+\newcommand{\Fonec}{$\mathrm{F1}_c$}
+\newcommand{\Iouc}{$\mathrm{IoU}_c$}
+\newcommand{\PrecC}{$\mathrm{Prec}_c$}
+\newcommand{\RecC}{$\mathrm{Rec}_c$}
+
+\begin{document}
+\history{Date of publication xxxx 00, 0000, date of current version March 12, 2026.}
+\doi{10.1109/ACCESS.2026.0000000}
+
+\title{\cosa{}: Correlation-Guided Change Attention with Learnable Residual Gating for Remote Sensing Change Detection}
+
+\author{\uppercase{Abdirashid Omar}\authorrefmark{1} and \uppercase{Jonghyuk Park}\authorrefmark{1}}
+\address[1]{Department of Data Science, Graduate School of Kookmin University, Seoul, Republic of Korea}
+\tfootnote{Code and materials: \href{https://github.com/rashiedomar/CoSA}{github.com/rashiedomar/CoSA}. Experiments use four datasets: LEVIR-CD, S2Looking, DSIFN, and CLCD.}
+\markboth
+{Omar and Park: \cosa{} for Remote Sensing Change Detection}
+{Omar and Park: \cosa{} for Remote Sensing Change Detection}
+\corresp{Corresponding author: Jonghyuk Park (e-mail: jonghyuk@kookmin.ac.kr).}
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\begin{keywords}
+change detection, remote sensing, Siamese network, decoder refinement, attention, correlation, plug-in module
+\end{keywords}
+
+\titlepgskip=-21pt
+\maketitle
+\raggedbottom
+
+\section{Introduction}\label{sec:introduction}
+\input{sections/01_introduction}
+
+\section{Related Work}\label{sec:related_work}
+\input{sections/02_related_work}
+
+\section{Method}\label{sec:method}
+\input{sections/02_method}
+
+\section{Experiments}\label{sec:experiments}
+\input{sections/03_experiments}
+\input{sections/05_ablation}
+\input{sections/07_hero_models}
+
+\section{Analysis}\label{sec:analysis}
+\input{sections/08_analysis}
+
+\section{Conclusion}\label{sec:conclusion}
+\input{sections/06_conclusion}
+
+\bibliographystyle{IEEEtran}
+\begingroup
+\sloppy
+\bibliography{refs}
+\endgroup
+
+\newpage
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author_omar.jpeg}}]{Abdirashid Omar}
+Abdirashid Omar received the B.Sc. degree in computer science from Bosaso University, Bosaso, Somalia, in 2022. He is currently pursuing the M.Sc. degree with Kookmin University, Seoul, South Korea, and is expected to graduate in August 2026. He is a member of the Vision AI Laboratory, where he conducts research under the supervision of Prof. Jonghyuk Park. His research interests include artificial intelligence, remote sensing, change detection, and computer vision methods.
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{author_park_bw.png}}]{Jonghyuk Park}
+Jonghyuk Park received the B.S. and Ph.D. degrees in industrial engineering from Seoul National University, Seoul, South Korea, in 2015 and 2021, respectively. He worked as a Product Management Engineer at Samsung Electronics in 2015 and was a Research Engineer with ai.m, Seoul, South Korea, from 2020 to 2021. Since 2021, he has been an Assistant Professor with the Department of AI, Big Data and Management, Kookmin University, Seoul, South Korea. His research interests include deep learning, artificial intelligence applications, computer vision, machine learning, and big data analytics.
+\end{IEEEbiography}
+
+\end{document}

@@ -1,0 +1,18 @@
+\begin{table*}[t]
+  \centering
+  \caption{Standalone hero models under their native pipelines (changed class).}
+  \label{tab:hero_models}
+  \setlength{\tabcolsep}{7pt}
+  \renewcommand{\arraystretch}{1.05}
+  \small
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l r r r r}
+    \toprule
+    Model & Variant & \PrecC{} & \RecC{} & \Fonec{} & \Iouc{} \\
+    \midrule
+    STANet & Baseline & 70.31 & \textbf{94.71} & 80.71 & 67.66 \\
+    STANet & + \cosa{} & \textbf{87.11} & 85.19 & \textbf{86.14} & \textbf{75.66} \\
+    BIT & Baseline & 91.37 & \textbf{91.08} & 91.22 & 83.87 \\
+    BIT & + \cosa{} & \textbf{92.38} & 90.17 & \textbf{91.26} & \textbf{83.93} \\
+    \bottomrule
+  \end{tabular*}
+\end{table*}

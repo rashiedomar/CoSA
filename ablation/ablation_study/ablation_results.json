@@ -1,0 +1,51 @@
+{
+  "baseline": {
+    "name": "B0: Baseline",
+    "f1": 87.7,
+    "iou": 78.09,
+    "precision": 90.23,
+    "recall": 85.31
+  },
+  "attention": {
+    "name": "B1: Attention-only",
+    "f1": 87.88,
+    "iou": 78.38,
+    "precision": 90.27,
+    "recall": 85.61
+  },
+  "cosa": {
+    "name": "B2 (v2): CoSA single-scale",
+    "f1": 88.23,
+    "iou": 78.94,
+    "precision": 93.88,
+    "recall": 83.22
+  },
+  "cosa_v3": {
+    "name": "B2 (v3): CoSA multi-scale",
+    "f1": 89.45,
+    "iou": 80.91,
+    "precision": 90.39,
+    "recall": 88.52
+  },
+  "cosa_multiscale_only": {
+    "name": "Ablation: Multi-scale only",
+    "f1": 87.35,
+    "iou": 77.54,
+    "precision": 91.35,
+    "recall": 83.68
+  },
+  "cosa_learnable_gate_only": {
+    "name": "Ablation: Learnable gate only",
+    "f1": 87.68,
+    "iou": 78.06,
+    "precision": 93.33,
+    "recall": 82.67
+  },
+  "aligned": {
+    "name": "B3: Alignment-first",
+    "f1": 88.7,
+    "iou": 79.69,
+    "precision": 92.0,
+    "recall": 85.62
+  }
+}

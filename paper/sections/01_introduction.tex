@@ -1,0 +1,29 @@
+Remote sensing change detection (CD) from bi-temporal imagery plays a critical role in a wide range of applications, including urban monitoring, disaster response, and environmental management \cite{aisha2023,jungeun2025,seda2022,kyaw2024,r2024,j2026}. With the increasing availability of high-resolution satellite imagery, modern CD systems are required to distinguish meaningful semantic changes from nuisance variations caused by illumination shifts, seasonal differences, and geometric inconsistencies \cite{devansh2025,zainoolabadien2020,k2024,sai2026}. Despite significant progress in deep learning-based approaches, achieving robust and consistent localization across diverse scenarios remains a challenging problem.
+
+Recent advances in CD have been driven by Siamese convolutional networks, attention-enhanced architectures, and transformer-based models, which improve feature representation and temporal interaction \cite{daudt2018fully,chen2020stanet,chen2022bit,bandara2022changeformer}. However, these methods often struggle to balance multi-scale localization, false-positive suppression, and computational efficiency, particularly under sparse changes, noisy labels, and ambiguous boundaries \cite{yan2024,shanshan2024,wei2024,devansh2025}. In many cases, global attention mechanisms introduce high computational cost without effectively resolving local ambiguity. These limitations highlight the need for a more targeted and efficient refinement strategy that can adaptively enhance change-relevant regions while preserving stable context. Section~\ref{sec:related_work} reviews these prior directions and clarifies the design gap addressed by \cosa{}.
+
+
+\subsection{Proposed Contribution: Context Sampling Attention}
+To address this limitation in explicit temporal control, we propose Context Sampling Attention (\cosa{}), a lightweight decoder-side refinement module that explicitly utilizes bi-temporal feature correlation as a control signal for change-aware feature enhancement. Unlike conventional attention mechanisms that implicitly learn feature relevance, \cosa{} performs targeted refinement by selectively sampling correlation-relevant context and adaptively integrating it into decoder features.
+
+Specifically, \cosa{} consists of three coordinated components: (i) correlation-guided local context sampling, which focuses on informative neighboring regions; (ii) multi-scale context aggregation, which captures both fine-grained boundaries and broader semantic structures; and (iii) learnable residual gating, which controls the strength of contextual refinement. This design enables \cosa{} to emphasize ambiguous or potentially changed regions while preserving stable background context, leading to improved temporal discriminability with minimal computational overhead.
+
+Importantly, \cosa{} is designed as a plug-in module that can be seamlessly integrated into existing Siamese encoder--decoder architectures without modifying the backbone. This allows consistent performance gains while maintaining architectural simplicity and efficiency. Figure~\ref{fig:intro_cosa_overview} illustrates this intuition by contrasting high-correlation stable context with low-correlation change-relevant regions in the refinement process.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{example.png}
+  \caption{Conceptual overview of \cosa{} in the introduction stage. Given bi-temporal features from \(T1\) and \(T2\), \cosa{} interprets high feature correlation as unchanged context and low correlation as potential change, then applies correlation-guided change attention for refined prediction.}
+  \label{fig:intro_cosa_overview}
+\end{figure}
+
+\subsection{Evaluation Scope and Findings}
+We evaluate \cosa{} on four benchmarks with complementary difficulty profiles: LEVIR-CD (clean building change), S2Looking (sparse off-nadir scenes), DSIFN (mixed urban-rural scenes), and CLCD (noisy agricultural boundaries). Across this suite, \cosa{} improves changed-class F1 by roughly 1.5--2.6 points with negligible parameter overhead. The improvement pattern is dataset-dependent: precision-oriented filtering on noisier or cluttered scenes, stronger recall recovery on ambiguous samples, and near-neutral behavior when the backbone already performs strong temporal fusion.
+
+\subsection{Contributions}
+\begin{itemize}
+  \item We formulate CoSA as a plug-in decoder refinement module that treats bi-temporal correlation as an explicit control signal for where to refine, rather than relying solely on implicit feature reweighting.
+  \item We integrate correlation-guided sampling, multi-scale aggregation, and learnable residual gating in one composite block; ablations show that peak performance requires this combination rather than any single component.
+  \item On four benchmarks (LEVIR-CD, S2Looking, DSIFN, and CLCD), we report changed-class F1 gains of 1.5--2.6 points over strong baselines with negligible parameter overhead.
+  \item On STANet and BIT, we observe large gains when temporal fusion is limited and near-neutral behavior when fusion is already strong.
+\end{itemize}

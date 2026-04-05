@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Data & heavy runs (keep repo lean)
+data/
+datasets/
+results/
+checkpoints/
+work_dirs/
+outputs/
+*.pth
+*.pkl
+*.h5
+
+# Logs
+*.log
+logs/
+*.out
+
+# LaTeX build artifacts (under paper/)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+
+# OS
+.DS_Store
+Thumbs.db

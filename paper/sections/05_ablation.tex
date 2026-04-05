@@ -1,0 +1,15 @@
+\subsection{Ablation Study}\label{sec:ablation}
+We conduct an ablation study over multiple variants on the same FC-Siam-diff-style backbone: baseline, attention-only, \cosa{} with multi-scale only, \cosa{} with gate only, \cosa{} with single-scale and fixed gate, alignment-first, and the full \cosa{} configuration with multi-scale refinement and learnable gating.
+
+Table~\ref{tab:ablation} lists quantitative results for each variant on LEVIR-CD. Figure~\ref{fig:ablation_qualitative} complements Table~\ref{tab:ablation} with qualitative error maps (false positives and false negatives) for the same setting.
+
+\input{tables/table2_ablation_variants}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{ablation_qualitative_alt3_errors_only_v2.png}
+  \caption{Qualitative ablation comparison (errors only): highlighted regions emphasize false positives and false negatives across variants.}
+  \label{fig:ablation_qualitative}
+\end{figure}
+
+``Multi-scale'' inserts \cosa{} at two resolutions (1/8 and 1/16). ``Learnable gate'' uses a trainable residual scale $\lambda$ (Section~\ref{sec:method}) initialized near zero; fixed-scale uses a constant residual factor. ``Gate only'' disables multi-scale placement and keeps only residual gating at the bottleneck. ``Alignment-first'' estimates local displacement and warps features before differencing. The full \cosa{} configuration (multi-scale + learnable residual scale) gives the best F1/IoU balance among tested variants. Relative to baseline, \cosa{} improves recall (+3.21 points) with near-stable precision (+0.16 points), yielding +1.75 \Fonec{} and +2.82 \Iouc{}. The single-scale fixed variant improves precision but reduces recall, indicating that correlation refinement without adaptive residual control can become overly conservative. The alignment-first variant improves over baseline but remains below full \cosa{}, suggesting that adaptive correlation-guided refinement is more effective than geometric pre-alignment alone in this setup \cite{shanshan2024,yan2024}. Table~\ref{tab:ablation} therefore provides the experimental evidence for the method-level claim: multi-scale sampling alone or gating alone is insufficient for peak performance, and the full gain appears only when correlation-guided sampling, multi-scale fusion, and adaptive residual control are used together. This combination enables a form of targeted refinement that is not achievable by conventional attention or single-component designs. Figure~\ref{fig:ablation_qualitative} illustrates where partial variants fail: the full module suppresses spurious detections while recovering missing change regions more consistently than partial variants.

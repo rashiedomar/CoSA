@@ -1,0 +1,38 @@
+This section moves beyond aggregate scores to analyze \emph{how} \cosa{} changes errors, \emph{where} gains occur at sample level, and \emph{why} behavior differs across datasets and backbones.
+
+\subsection{Error Correction Mechanics: FP/FN Transitions}
+To expose correction behavior, we compare baseline and \cosa{} error counts and report percentage reduction:
+\begin{equation}
+\begin{aligned}
+\mathrm{FP\ Red.}&=\frac{\mathrm{FP}_{\text{base}}-\mathrm{FP}_{\text{cosa}}}{\mathrm{FP}_{\text{base}}}\times 100,\\
+\mathrm{FN\ Red.}&=\frac{\mathrm{FN}_{\text{base}}-\mathrm{FN}_{\text{cosa}}}{\mathrm{FN}_{\text{base}}}\times 100.
+\end{aligned}
+\end{equation}
+Positive values indicate fewer errors with \cosa{}; negative values indicate error increase.
+
+\input{tables/table4_error_mechanics}
+
+\noindent\textbf{Interpretation.} Table~\ref{tab:error_mechanics} shows that the correction strategy is backbone-dependent. In the controlled CNN setting (FC-Siam), \cosa{} is recall-oriented: FN decreases while FP rises. In STANet, behavior flips to precision-oriented filtering: FP drops strongly while FN increases. In BIT, shifts are comparatively small, consistent with partial redundancy when temporal interaction is already strong \cite{chen2022bit,w2022,wei2024}. This confirms that \cosa{} is adaptive rather than uniformly precision- or recall-biased.
+
+\subsection{Patch-Level Consistency and Sample-Wise Distribution}
+For each sample $i$, we compute:
+\begin{equation}
+\Delta \mathrm{F1}_c^{(i)} = \mathrm{F1}_{c,\text{cosa}}^{(i)} - \mathrm{F1}_{c,\text{base}}^{(i)},
+\end{equation}
+then group samples into significant gain ($>10$), moderate gain ($2$--$10$), neutral ($-1$ to $+2$), and degradation ($<-1$) buckets.
+
+\input{tables/table5_consistency}
+
+\noindent\textbf{Interpretation.} Table~\ref{tab:consistency} shows that most samples are neutral across all families (especially BIT), indicating that refinement is largely non-interfering. For FC-Siam and STANet, improvement buckets (moderate + significant) exceed degradation frequency, which explains positive aggregate gains. BIT remains predominantly neutral, consistent with its near-ceiling baseline and marginal overall gain in standalone tests.
+
+\noindent\textbf{When \cosa{} helps.} Strongest improvements are concentrated in FN-heavy and boundary-ambiguous samples, where local correlation cues recover coherent changed regions missed by baseline predictions.
+
+\noindent\textbf{When \cosa{} can hurt.} Degradation is concentrated in ambiguous or noisy-label regions and weak-texture areas, where correlation structure is less reliable.
+
+\subsection{Cross-Dataset Adaptive Behavior}
+Controlled results in Table~\ref{tab:fcsiam_vs_cosa} show that \cosa{} improves \Fonec{} on all four datasets, but via different precision/recall routes. LEVIR-CD benefits mainly from recall recovery with stable precision; S2Looking improves both precision and recall; DSIFN shifts strongly toward recall; and CLCD shifts toward precision filtering under noisier boundaries. This pattern supports the method claim from Section~\ref{sec:method}: learnable residual gating enables dataset-dependent calibration rather than fixed global behavior.
+
+\subsection{Computational Cost and Efficiency Discussion}
+\cosa{} is designed as a local decoder refinement with neighborhood-based correlation sampling and lightweight residual gating. For window size $k$ and channel count $C$, the dominant cost is local correlation sampling $O(HWk^2C)$ plus linear-time aggregation/gating $O(HWC)$, which avoids global all-pairs interaction.
+
+In our controlled FC-Siam setup, the parameter increase is negligible (\(\Delta\)Params \(= +0.000066\)M; see repository efficiency summary), while delivering +1.75 \Fonec{} on LEVIR-CD. This profile supports practical deployment as a plug-in module. A standardized cross-hardware latency benchmark is left for future work.

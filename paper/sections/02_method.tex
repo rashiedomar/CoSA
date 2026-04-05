@@ -1,0 +1,81 @@
+We present Context Sampling Attention (\cosa{}) as a lightweight decoder-side refinement module for Siamese change detection pipelines. The method is designed to be interpretable, computationally efficient, and plug-in compatible with existing encoder--decoder systems. Its central novelty is that local bi-temporal correlation is used as an explicit decoder-side control signal for refinement, rather than being left as an implicit byproduct of generic attention or backbone fusion.
+
+\subsection{Overview and Architecture}
+Given a bi-temporal pair $(I_1, I_2)$, a Siamese encoder extracts multi-scale features and a differencing operator produces decoder-level change-aware tensors, following common FC-Siam-style practice \cite{daudt2018fully,hongruixuan2019,ronneberger2015unet}. \cosa{} is inserted at selected decoder stages (typically 1/8 and 1/16 resolution) to refine these difference features without changing the encoder or prediction head.
+
+\noindent\textbf{Design principle.} Rather than replacing the backbone with global self-attention, \cosa{} performs localized decoder refinement where change/no-change ambiguity is resolved. This keeps architectural disruption low while improving temporal discriminability. The proposed architecture is depicted in Figure~\ref{fig:arch}, which shows where \cosa{} is inserted in the decoder and how correlation-guided sampling, multi-scale fusion, and residual-gated refinement are applied before downstream decoding.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{model_architecture.png}
+  \caption{Full FC-Siam-style pipeline with \cosa{} inserted at selected decoder stages. The figure shows the bi-temporal inputs, shared Siamese encoder, multi-scale difference features, \cosa{} refinement applied to deep difference features, progressive decoding, final change-map prediction, and the weighted BCE loss used during training.}
+  \label{fig:arch}
+\end{figure*}
+
+\subsection{Correlation-Based Context Sampling}
+\noindent\textbf{Intuition.} Temporal correlation provides a practical signal for refinement control. High local correlation generally indicates stable unchanged context, while low correlation often appears near changed or ambiguous regions.
+
+Unlike standard attention mechanisms that compute soft weights over all neighbors, \cosa{} first filters the neighborhood through correlation relevance and then aggregates only the selected context. This makes the refinement decision explicit, sparse, and directly tied to temporal agreement rather than generic feature weighting.
+
+Let $F_{\text{diff}} \in \mathbb{R}^{H \times W \times C}$ be a decoder difference feature map. For each position $(x,y)$ and neighbor $p \in \mathcal{N}(x,y)$, we compute:
+\begin{equation}
+\mathrm{Corr}(x,y,p) = F_{\text{diff}}(x,y)\cdot F_{\text{diff}}(p),
+\end{equation}
+where $\cdot$ denotes channel-wise inner product.
+
+We keep only correlation-relevant neighbors:
+\begin{equation}
+\mathcal{N}_{\text{corr}}(x,y)=\left\{p\in\mathcal{N}(x,y): \mathrm{Corr}(x,y,p)>\tau \right\},
+\end{equation}
+and aggregate selected context by a lightweight operator:
+\begin{equation}
+\mathrm{Ctx}(x,y)=\mathrm{Agg}\!\left(\left\{F_{\text{diff}}(p): p \in \mathcal{N}_{\text{corr}}(x,y)\right\}\right).
+\end{equation}
+Here, $\tau$ is a sampling threshold (fixed or learnable), and $\mathrm{Agg}(\cdot)$ is mean/max or a lightweight learned combiner.
+
+Compared with dense global attention, this local sampling reduces complexity from global pairwise interaction to neighborhood interaction, with practical cost $O(HWk^2C)$ for a $k \times k$ window.
+
+\subsection{Multi-Scale Context Integration}
+Change cues span multiple scales: fine boundaries require high-resolution detail, while large-area changes require coarser semantic context. We therefore fuse correlation-guided context across decoder scales:
+\begin{equation}
+\begin{aligned}
+\mathrm{Ctx}_{\text{multi}}(x,y)=\mathrm{Concat}\big(&\mathrm{Ctx}^{(1)}(x,y),\ldots,\\
+&\mathrm{Ctx}^{(N)}(x,y)\big),
+\end{aligned}
+\end{equation}
+where coarser contexts are upsampled to the target scale before concatenation.
+
+This design preserves both local boundary structure and broader scene consistency, consistent with multi-scale principles used in modern CD decoders \cite{yan2024,shanshan2024,binhao2025}. In \cosa{}, multi-scale integration is particularly important because correlation-guided sampling may capture different change patterns at different spatial resolutions. When needed, a $1\times1$ projection compresses concatenated channels before gating to control parameter growth.
+
+\subsection{Learnable Residual Gating}
+Refined context is injected through residual gating:
+\begin{equation}
+F_{\text{refined}} = F_{\text{base}} + \lambda \odot \mathrm{Ctx}_{\text{multi}},
+\end{equation}
+where $\lambda$ is a learnable gate (scalar, channel-wise, or element-wise) and $\odot$ is element-wise multiplication.
+
+While residual gating itself is not new, its role in \cosa{} is different from generic residual scaling modules that simply rescale fused decoder features after aggregation. In \cosa{}, the gate modulates only correlation-sampled multi-scale context, so the network decides how much temporally supported evidence should be injected into the decoder at each location and scale. This makes the gate part of the explicit temporal-control mechanism rather than a generic stabilization trick. If the sampled context is unhelpful, \cosa{} suppresses refinement through small $\lambda$; if the context is informative, it amplifies refinement. Residual gating therefore decouples \emph{what to sample} from \emph{how strongly to apply it}, giving \cosa{} adaptive decoder-side control with far lower overhead than heavy global interaction modules \cite{w2022,wei2024,xiaowen2024}.
+
+\subsection{Training Objective}
+\cosa{} does not introduce an auxiliary supervision branch; it is trained with the same pixel-wise changed/unchanged objective used by the underlying CD model. Let $Y \in \{0,1\}^{H \times W}$ denote the ground-truth change mask and $\hat{P} \in [0,1]^{H \times W}$ the predicted changed-class probability map. We optimize a weighted binary cross-entropy loss:
+\begin{equation}
+\begin{aligned}
+\mathcal{L}_{\text{wBCE}} = - \sum_{x,y} \big[& w_1 Y_{x,y}\log \hat{P}_{x,y} \\
+&+ w_0(1-Y_{x,y})\log(1-\hat{P}_{x,y})\big],
+\end{aligned}
+\end{equation}
+where $w_1$ and $w_0$ balance the changed and unchanged classes, respectively. In our controlled experiments, we use the same unchanged:changed weighting ratio of $1:3$ for both the baseline and \cosa{}, so performance differences reflect decoder refinement rather than a modified loss design. The full optimization recipe is given in the experimental protocol section.
+
+\subsection{Module Workflow and Integration}
+At each selected decoder stage, \cosa{} executes:
+\begin{enumerate}
+  \item compute difference features from bi-temporal decoder activations;
+  \item perform correlation-guided context sampling (possibly at multiple scales);
+  \item fuse sampled context and apply residual gating;
+  \item pass refined features to subsequent decoder operations.
+\end{enumerate}
+
+\noindent\textbf{Integration scope.} \cosa{} is plug-and-play: encoder backbone, differencing strategy, and prediction head remain unchanged. In our setup, practical defaults are a $3\times3$ neighborhood, two decoder scales (1/8 and 1/16), and near-zero gate initialization for stable warm-up.
+
+\subsection{Method-Level Novelty Summary}
+The novelty of \cosa{} lies in its explicit use of local bi-temporal correlation as a control signal, combined with a coordinated refinement design that integrates correlation-guided sampling, multi-scale fusion, and adaptive residual gating. This combination enables a form of targeted refinement that is not achievable by conventional attention or single-component designs.

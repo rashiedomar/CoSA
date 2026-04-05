@@ -1,0 +1,16 @@
+\begin{table}[t]
+  \centering
+  \caption{Error correction mechanics when adding \cosa{}: percent reduction in FP/FN counts computed as $(\mathrm{baseline}-\mathrm{\cosa{}})/\mathrm{baseline}\times100$ (same test split, cached per-sample confusion). Positive values mean \cosa{} reduces that error count; negative values mean \cosa{} increases it.}
+  \label{tab:error_mechanics}
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.05}
+  \begin{tabular}{l l l}
+    \toprule
+    Model family & FP reduction & FN reduction \\
+    \midrule
+    CNN (FC-Siam) & -30.3\% & \textbf{+23.7\%} \\
+    Attention (STANet) & \textbf{+68.5\%} & -179.8\% \\
+    Transformer (BIT) & +13.6\% & -10.2\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
