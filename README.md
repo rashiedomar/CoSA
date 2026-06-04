@@ -1,52 +1,69 @@
-# CoSA — Correlation-Guided Change Attention
+# CoSA: Correlation-Guided Change Attention with Learnable Residual Gating for Remote Sensing Change Detection
 
-Official **paper + experiment configs** release for **CoSA** (Context Sampling Attention): a lightweight decoder-side refinement module for remote sensing change detection.
+This repository contains the code, experiment assets, and reproducibility materials for **CoSA**, a lightweight decoder-side refinement module for bi-temporal remote sensing change detection.
 
-**Repository:** [https://github.com/rashiedomar/CoSA](https://github.com/rashiedomar/CoSA)
+**Status:** Accepted for publication in **IEEE Access**.
 
-This tree is a **clean export** for **public GitHub** and **submission**: LaTeX paper, **configuration files** for training/benchmarks, scripts, and compact ablation summaries—**no** bundled model Python package or checkpoints.
+![CoSA architecture](figures/model_architecture.png)
 
----
+## Overview
 
-## Layout
+CoSA improves Siamese change detection by using explicit bi-temporal feature correlation to guide context sampling, multi-scale aggregation, and learnable residual gating. The repository includes Open-CD-style experiment configs, ablation artifacts, and figure/table generation scripts used to support the paper.
 
-| Path | Contents |
-|------|-----------|
-| **`paper/`** | IEEE Access LaTeX project: `main.tex`, `sections/`, `tables/`, `refs.bib`, `figures/`, class files. **Use this for Overleaf** (see `OVERLEAF.md`). |
-| **`configs/`** | **All experiment definitions** used with Open-CD / MMEngine-style runs: `configs/custom/` (baseline + CoSA) and `configs/opencd/` (model recipes). These are Python config files (not a separate `models/` tree). |
-| **`scripts/`** | Figure/table generation and analysis helpers (optional; may expect a local Open-CD checkout for imports). |
-| **`figures/`** | Extra plots used by scripts (not all are in `paper/figures/`). |
-| **`ablation/`** | README + compact summaries (`*.json`, `*.md`, `visualizations/`). |
-| **`LICENSE`** | MIT |
-| **`CITATION.cff`** | Citation metadata |
+## Paper Status
 
----
+The paper has been accepted in **IEEE Access**. The official IEEE article link and DOI can be added here once the publication page is live.
 
-## Quick start
+## Repository Structure
 
-- **Paper only:** see **`OVERLEAF.md`** and zip **`paper/`** for Overleaf.
-- **Reproduce training:** use an [Open-CD](https://github.com/likyoo/open-cd) (or compatible) environment, point dataset paths in **`configs/`**, and run with the same framework versions you used in the lab. **Checkpoints and full training code are not shipped** in this repo to keep it small and license-clean.
+| Path | Purpose |
+|------|---------|
+| `configs/custom/` | Standalone CoSA and baseline configs used during method development. |
+| `configs/opencd/` | Open-CD-style model configs used for integration and benchmarking. |
+| `models/` | Model wrappers, standalone experiments, and selected logs/checkpoints kept with the repo. |
+| `scripts/` | Figure generation, table generation, and analysis utilities referenced by the paper. |
+| `ablation/` | Ablation study logs, summaries, tables, and qualitative outputs. |
+| `figures/` | Repository-level figures used in documentation and analysis. |
+| `data/LEVIR-CD/README.md` | Expected dataset folder structure placeholder for LEVIR-CD. |
 
-```bash
-pip install -r requirements.txt   # minimal; add torch / mmcv per your stack
-```
+## Benchmarks Covered
 
----
+The paper reports results on:
 
-## What is intentionally excluded
+- LEVIR-CD
+- S2Looking
+- DSIFN
+- CLCD
 
-- **`models/`** (standalone training scripts and local checkpoints from development).  
-- Raw datasets, `work_dirs/`, and `*.pth` weights.  
-- Multi‑gigabyte ablation run directories (only summaries + small visuals are included).
+## Reproducibility Notes
 
----
+This public repository is intentionally lighter than the full internal research workspace.
+
+- Included: configs, analysis scripts, ablation artifacts, and selected experiment logs/checkpoints.
+- Excluded: full datasets, large training outputs, most checkpoints, and local `results/` or `work_dirs/` directories.
+- The Open-CD-style configs in `configs/opencd/` are the main entry points for reproducing the reported experiments once the required datasets and dependencies are prepared locally.
 
 ## Citation
 
-See **`CITATION.cff`**. Cite the IEEE Access article when DOI/issue are final.
+If this repository contributes to your work, please cite the accepted IEEE Access paper.
 
----
+```bibtex
+@article{omar2026cosa,
+  title   = {CoSA: Correlation-Guided Change Attention with Learnable Residual Gating for Remote Sensing Change Detection},
+  author  = {Omar, Abdirashid and Park, Jonghyuk},
+  journal = {IEEE Access},
+  year    = {2026},
+  note    = {Accepted for publication}
+}
+```
 
-## Authors
+Additional repository metadata is available in [`CITATION.cff`](CITATION.cff).
 
-Abdirashid Omar · Jonghyuk Park — Kookmin University, Seoul, Republic of Korea
+## License
+
+This project is released under the MIT License. See [`LICENSE`](LICENSE).
+
+## Contact
+
+- Abdirashid Omar, Kookmin University
+- Jonghyuk Park, Kookmin University
