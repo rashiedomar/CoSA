@@ -1,42 +1,93 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
 venv/
-.venv/
 env/
+ENV/
+.venv
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
+*.swo
+*~
 
-# Data & heavy runs (keep repo lean)
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Data and results
 data/
 datasets/
 results/
 checkpoints/
-work_dirs/
-outputs/
 *.pth
 *.pkl
 *.h5
+*.hdf5
 
 # Logs
 *.log
 logs/
 *.out
 
-# LaTeX build artifacts (under paper/)
+# Keep paper-evidence logs under version control
+!ablation/ablation_study/*.log
+!ablation/ablation_study/**/*.log
+!models/stanet_pp_standalone/*.log
+!models/bit_pp_standalone/training.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model outputs
+work_dirs/
+outputs/
+
+# Local scratch / large unused asset dumps (keep repo clone lean)
+unused_paper_figures_20260306/
+
+# Internal review and working material not intended for the public repo
+CoSA_Response_to_Reviewers_All.pdf
+reviewers/
+original paper/
+IEEE_Access_CoSA/
+scripts/generate_highlighted_pdf.py
+
+# LaTeX build artifacts
 *.aux
 *.bbl
 *.blg
 *.fdb_latexmk
 *.fls
+*.lof
+*.lot
 *.synctex.gz
 *.toc
-
-# OS
-.DS_Store
-Thumbs.db
