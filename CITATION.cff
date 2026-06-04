@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use this repository, please cite our CoSA paper."
-title: "CoSA: Correlation-Guided Change Attention for Remote Sensing Change Detection"
+message: "If you use this repository, please cite the accepted IEEE Access CoSA paper."
+title: "CoSA: Correlation-Guided Change Attention with Learnable Residual Gating for Remote Sensing Change Detection"
 type: software
 authors:
   - family-names: Omar
